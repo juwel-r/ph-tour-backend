@@ -3,13 +3,13 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVar } from "./app/config/env";
-
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(envVar.DB_URL);
+    await mongoose.connect(envVar.DB_URL_LOCAL);
     console.log("Mongoose connected.");
 
     server = app.listen(envVar.PORT, () => {
@@ -20,7 +20,15 @@ async function main() {
   }
 }
 
-main();
+(async () => {
+  try {
+    await main();
+    await seedSuperAdmin();
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+})();
 
 //==>> Error Handler
 // See details about error handler => '../___notes.js'
@@ -36,7 +44,7 @@ process.on("uncaughtException", (error) => {
   process.exit(1);
 });
 
-process.on("unhandledRejection", (error:any) => {
+process.on("unhandledRejection", (error: any) => {
   console.log(
     "unhandledRejection error detected, server shutting down!",
     error.name
