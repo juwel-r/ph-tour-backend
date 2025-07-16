@@ -1,10 +1,9 @@
 import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
+import {  IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import httpStatusCodes from "http-status-codes";
 import bcryptjs from "bcryptjs";
-import { generateToken } from "../../utils/jwt";
-import { envVar } from "../../config/env";
+import { createAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 
 const credentialLogin = async (payload: Partial<IUser>) => {
   const { email, password } = payload;
@@ -24,19 +23,28 @@ const credentialLogin = async (payload: Partial<IUser>) => {
     throw new AppError(httpStatusCodes.UNAUTHORIZED, "Password not match.");
   }
 
-  const jwtPayload = {
-    uid: isUserExist._id,
-    email: isUserExist.email,
-    role: isUserExist.role,
+  const userTokens = createUserTokens(isUserExist);
+
+  const loggedUser = isUserExist.toObject(); //created a shallow copy of logged user
+  delete loggedUser.password; //removed password to send client side
+
+  return {
+    accessToken: userTokens.accessToken,
+    refreshToken: userTokens.refreshToken,
+    user: loggedUser,
   };
+};
 
-  // const accessToken = jwt.sign(jwtPayload, 'hello-secret', {expiresIn:'1h'});
-  const accessToken = generateToken(jwtPayload, envVar.JWT_SECRET, envVar.JWT_EXPIRES)
+//new access token
 
-  return { accessToken};
+export const getNewAccessToken = async (refreshToken: string) => {
+
+const newAccessToken = await createAccessTokenWithRefreshToken(refreshToken)
+  return {accessToken:newAccessToken};
 };
 //
 
 export const AuthServices = {
   credentialLogin,
+  getNewAccessToken,
 };

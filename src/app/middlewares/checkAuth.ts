@@ -10,7 +10,8 @@ export const checkAuth =
   (...authRoles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = req.headers.authorization;
+      const accessToken = req.cookies.accessToken;
+      // const accessToken = req.headers.authorization;
 
       if (!accessToken) {
         throw new AppError(403, "No access token received");
@@ -19,7 +20,7 @@ export const checkAuth =
       // const verifiedToken = jwt.verify(accessToken, "secret");
       const verifiedToken = verifyToken(
         accessToken,
-        envVar.JWT_SECRET
+        envVar.JWT_ACCESS_SECRET
       ) as JwtPayload;
 
       if (!authRoles.includes(verifiedToken.role)) {

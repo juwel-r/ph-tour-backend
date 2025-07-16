@@ -18,6 +18,7 @@ export enum IsActive {
 }
 
 export interface IUser {
+  _id?:string;
   name: string;
   email: string;
   password?: string;
@@ -27,7 +28,7 @@ export interface IUser {
   role: Role;
   isActive?: IsActive;
   isVerified?: boolean;
-  isDelete?: string;
+  isDelete?: boolean;
   auth: AuthProvider[];
   // bookings: Types.ObjectId[];
   // guides: Types.ObjectId[];

@@ -52,7 +52,7 @@ const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
     // const token = req.headers.authorization as string;
-    // const verifiedToken = verifyToken(token, envVar.JWT_SECRET) as JwtPayload;
+    // const verifiedToken = verifyToken(token, envVar.JWT_ACCESS_SECRET) as JwtPayload;
     const verifiedToken = req.user;
     const payload = req.body;
 
@@ -74,5 +74,5 @@ const updateUser = catchAsync(
 export const UserControllers = {
   createUser,
   getAllUsers,
-  updateUser
+  updateUser,
 };
