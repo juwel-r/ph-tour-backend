@@ -1,14 +1,12 @@
 import { JwtPayload } from "jsonwebtoken";
 import { envVar } from "../config/env";
-import { IsActive, IUser } from "../modules/user/user.interface";
 import { generateToken, verifyToken } from "./jwt";
-import { User } from "../modules/user/user.model";
-import AppError from "../errorHelpers/AppError";
-import httpStatusCodes from 'http-status-codes'
+import { isUserExistOrActive } from "./isUserExistOrActive";
+import { IUser } from "../modules/user/user.interface";
 
-export const createUserTokens =(user:Partial<IUser>)=>{
-      const jwtPayload = {
-    uid: user._id,
+export const createUserTokens = (user: Partial<IUser>) => {
+  const jwtPayload: JwtPayload = {
+    userId: user._id,
     email: user.email,
     role: user.role,
   };
@@ -25,33 +23,21 @@ export const createUserTokens =(user:Partial<IUser>)=>{
     envVar.JWT_REFRESH_SECRET,
     envVar.JWT_REFRESH_EXPIRES
   );
-  return{accessToken, refreshToken}
-}
+  return { accessToken, refreshToken };
+};
 
-export const createAccessTokenWithRefreshToken =async (refreshToken:string)=>{
+export const createAccessTokenWithRefreshToken = async (
+  refreshToken: string
+) => {
   const verifiedRefreshToken = verifyToken(
     refreshToken,
     envVar.JWT_REFRESH_SECRET
   ) as JwtPayload;
 
-  const isUserExist = await User.findOne({ email: verifiedRefreshToken.email });
-
-  if (!isUserExist) {
-    throw new AppError(
-      httpStatusCodes.BAD_REQUEST,
-      `No user exist with ${verifiedRefreshToken.email}`
-    );
-  }
-
-  if (isUserExist.isActive !== IsActive.ACTIVE || isUserExist.isDelete) {
-    throw new AppError(
-      httpStatusCodes.BAD_REQUEST,
-      "User Inactive or Blocked or Deleted."
-    );
-  }
+  const isUserExist = await isUserExistOrActive(verifiedRefreshToken.email);
 
   const jwtPayload = {
-    uid: isUserExist._id,
+    userId: isUserExist._id,
     email: isUserExist.email,
     role: isUserExist.role,
   };
@@ -62,5 +48,5 @@ export const createAccessTokenWithRefreshToken =async (refreshToken:string)=>{
     envVar.JWT_ACCESS_EXPIRES
   );
 
-  return accessToken
-}
+  return accessToken;
+};

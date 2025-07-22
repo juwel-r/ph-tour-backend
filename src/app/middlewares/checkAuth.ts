@@ -5,6 +5,7 @@ import { envVar } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { verifyToken } from "../utils/jwt";
 import { NextFunction, Request, Response } from "express";
+import { isUserExistOrActive } from "../utils/isUserExistOrActive";
 
 export const checkAuth =
   (...authRoles: string[]) =>
@@ -22,6 +23,8 @@ export const checkAuth =
         accessToken,
         envVar.JWT_ACCESS_SECRET
       ) as JwtPayload;
+
+      isUserExistOrActive(verifiedToken.email);
 
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(

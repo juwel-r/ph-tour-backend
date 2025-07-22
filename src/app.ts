@@ -3,11 +3,24 @@ import cors from "cors";
 import { router } from "./app/routes";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import { NotFoundRoute } from "./app/middlewares/notFound";
-import cookieParser  from "cookie-parser";
+import cookieParser from "cookie-parser";
+import passport from "passport";
+import expressSession from "express-session";
+import "./app/config/passport";
 
 const app = express();
+
+app.use(
+  expressSession({
+    secret: "my-secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(cors());
 app.use("/api/v1", router);
 
@@ -36,7 +49,6 @@ export default app;
 -> create service
 -> create route
  */
-
 
 /**
  * Module Summary ==>> Module 26
@@ -69,5 +81,26 @@ export default app;
  * 10. JWT Setup -> create a middleware (checkAuth)
  * 11. Create a API for Update User and validate permissions, must set validation middleware in route which made with ZOD
  * 12. Create a seedSuperAdmin to create a Super Admin Role in database at initiate of Server.
- * 12. Create custom Global Type for Express Request (req.user) and applied store verifiedToken data in req.user
+ * 13. Create custom Global Type for Express Request (req.user) and applied store verifiedToken data in req.user
+ * 
+ 
+
+
+ * Module Summary ==>> Module 28 <<====
+ * 
+ * Create Refresh token and create accessToken with refreshToken
+ * set tokens in cookies and get tokens from cookies
+ * create logout api
+ * create reset or change password api
+ * 
+ * === Passport js ===
+ * Passport js for Third Party Authentication with Google Cloud
+ * configuration passport js in app.ts with "app.use" 
+        middleware => passport.initialize() and passport.session() and use express-session middleware
+ *
+ * Setup passport js in config folder as passport.ts
+ * need to serializeUser and deserializeUser Setup
+ * finally import passport config file in app.ts
+ *  >** must use "express-session" middleware before" passport.initialize" and "passport.session"
+ * setup  and dynamic redirect route of frontend in with state by received query in "/api/v1/auth/google" route
  */
