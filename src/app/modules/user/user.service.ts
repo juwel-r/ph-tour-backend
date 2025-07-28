@@ -9,10 +9,11 @@ import { JwtPayload } from "jsonwebtoken";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
 
-  const isEmailExist = await User.findOne({ email });
-  if (isEmailExist) {
-    throw new AppError(httpStatusCodes.BAD_REQUEST, "Email already registered");
-  }
+  // // ==> This is keep off for try global error handle
+  // const isEmailExist = await User.findOne({ email });
+  // if (isEmailExist) {
+  //   throw new AppError(httpStatusCodes.BAD_REQUEST, "Email already registered");
+  // }
 
   const auth: AuthProvider = {
     provider: "credential",
@@ -50,6 +51,7 @@ const updateUser = async (
 ) => {
   const isUserExist = await User.findById(userId);
 
+  
   if (!isUserExist) {
     throw new AppError(
       httpStatusCodes.NOT_FOUND,
