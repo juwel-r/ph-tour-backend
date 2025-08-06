@@ -1,42 +1,41 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import bcryptjs from "bcryptjs";
 import {
   createAccessTokenWithRefreshToken,
-  createUserTokens,
 } from "../../utils/userTokens";
 import { JwtPayload } from "jsonwebtoken";
-import { isUserExistOrActive } from "../../utils/isUserExistOrActive";
 import { User } from "../user/user.model";
 import { envVar } from "../../config/env";
 
-const credentialLogin = async (payload: Partial<IUser>) => {
-  const { email, password } = payload;
 
-  const isUserExist = await isUserExistOrActive(email!);
+//Login ==> it commented cause of using "Passport js local" 
+// const credentialLogin = async (payload: Partial<IUser>) => {
+//   const { email, password } = payload;
 
-  const isPasswordMatch = await bcryptjs.compare(
-    password as string,
-    isUserExist.password as string
-  );
+//   const isUserExist = await isUserExistOrActive(email!);
 
-  if (!isPasswordMatch) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "Password not match.");
-  }
+//   const isPasswordMatch = await bcryptjs.compare(
+//     password as string,
+//     isUserExist.password as string
+//   );
 
-  const userTokens = createUserTokens(isUserExist);
+//   if (!isPasswordMatch) {
+//     throw new AppError(httpStatus.UNAUTHORIZED, "Password not match.");
+//   }
 
-  const loggedUser = isUserExist.toObject(); //created a shallow copy of logged user
-  delete loggedUser.password; //removed password to send client side
+//   const userTokens = createUserTokens(isUserExist);
 
-  return {
-    accessToken: userTokens.accessToken,
-    refreshToken: userTokens.refreshToken,
-    user: loggedUser,
-  };
-};
+//   const loggedUser = isUserExist.toObject(); //created a shallow copy of logged user
+//   delete loggedUser.password; //removed password to send client side
+
+//   return {
+//     accessToken: userTokens.accessToken,
+//     refreshToken: userTokens.refreshToken,
+//     user: loggedUser,
+//   };
+// };
 
 //new access token =>
 const getNewAccessToken = async (refreshToken: string) => {
@@ -66,7 +65,7 @@ const resetPassword = async (  newPassword: string,  oldPassword: string,  decod
 };
 
 export const AuthServices = {
-  credentialLogin,
+  // credentialLogin,
   getNewAccessToken,
   resetPassword,
 };

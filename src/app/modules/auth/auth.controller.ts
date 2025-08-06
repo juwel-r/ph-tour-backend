@@ -9,19 +9,49 @@ import { setCookieAuth } from "../../utils/setCookie";
 import { createUserTokens } from "../../utils/userTokens";
 import { envVar } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import passport from "passport";
+import { IUser } from "../user/user.interface";
 
 const credentialLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const loginInfo = await AuthServices.credentialLogin(req.body);
 
-    setCookieAuth(res, loginInfo);
+    // // === >> this is manual login system by using "AuthServices.credentialLogin"
+    // const loginInfo = await AuthServices.credentialLogin(req.body); 
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatusCodes.OK,
-      message: "User Logged In successful",
-      data: loginInfo,
-    });
+    //Try passport js local login system
+    passport.authenticate("local", (err: any, user: any, info: any) => {
+      if (err) {
+        //❌❌❌
+        // return new AppError(401, err);
+        //next(err)
+        //throw new AppError(401, err)
+
+        //✅✅✅ -> must user "return" and "next"
+        // return next(err);
+        return next(new AppError(401, err));
+      }
+
+      // // No need to use this part, cause if user not found then passport will pass an error in done() and that error will caught if error true
+      // if (!user) {
+      //   return new AppError(401, err);
+      // }
+
+      const userTokens = createUserTokens(user);
+
+      delete user.toObject().password;
+      setCookieAuth(res, userTokens);
+
+      sendResponse(res, {
+        success: true,
+        statusCode: httpStatusCodes.OK,
+        message: "User Logged In successful",
+        data: {
+          accessToken: userTokens.accessToken,
+          refreshToken: userTokens.refreshToken,
+          user,
+        },
+      });
+    })(req, res, next);
   }
 );
 
@@ -95,7 +125,7 @@ const googleCallback = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
 
-    const redirectTo = req.query.state //state is passed in route 
+    const redirectTo = req.query.state; //state is passed in route
 
     if (!user) {
       throw new AppError(httpStatusCodes.NOT_FOUND, "User not found");
@@ -105,13 +135,13 @@ const googleCallback = catchAsync(
 
     setCookieAuth(res, tokenInfo);
 
-    res.redirect(envVar.FRONTEND_URL+redirectTo);
+    res.redirect(envVar.FRONTEND_URL + redirectTo);
   }
 );
 
 export const AuthController = {
   credentialLogin,
-  getNewAccessToken, 
+  getNewAccessToken,
   logout,
   resetPassword,
   googleCallback,

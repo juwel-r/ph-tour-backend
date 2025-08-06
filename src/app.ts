@@ -93,7 +93,8 @@ export default app;
  * create logout api
  * create reset or change password api
  * 
- * === Passport js ===
+ * 
+ * === Passport js  for google login===
  * Passport js for Third Party Authentication with Google Cloud
  * configuration passport js in app.ts with "app.use" 
         middleware => passport.initialize() and passport.session() and use express-session middleware
@@ -103,4 +104,8 @@ export default app;
  * finally import passport config file in app.ts
  *  >** must use "express-session" middleware before" passport.initialize" and "passport.session"
  * setup  and dynamic redirect route of frontend in with state by received query in "/api/v1/auth/google" route
+ * 
+ * === Passport js  for credential login===
+ * 
+ * 
  */
