@@ -11,9 +11,12 @@ export const TourType = model<ITourType>("TourType", tourTypeSchema);
 const tourSchema = new Schema<ITour>(
   {
     title: { type: String, required: true },
-    slug: { type: String, required: true },
+    slug: { type: String, unique: true },
     description: { type: String },
     images: { type: [String], default: [] },
+    location:{ type: String },
+    arrivalLocation:{ type: String },
+    departureLocation:{ type: String },
     costFrom: { type: String },
     startDate: { type: Date },
     endDate: { type: Date },
@@ -31,5 +34,26 @@ const tourSchema = new Schema<ITour>(
     timestamps: true,
   }
 );
+
+tourSchema.pre("save", async function (next) {
+  this.slug = this.title.toLocaleLowerCase().split(" ").join("-");
+
+  // if(this.isModified("title")){
+  // this.slug = this.title.toLocaleLowerCase().split(" ").join("-");
+  // }
+
+  next();
+});
+
+tourSchema.pre("findOneAndUpdate", async function (next) {
+  //to access tour data  need to this.getUpdate()
+  const tour = this.getUpdate() as ITour;
+  if (tour.title) {
+    tour.slug = tour.title.toLocaleLowerCase().split(" ").join("-");
+  }
+  //after modify via middleware need to set manually
+  this.setUpdate(tour);
+  next()
+});
 
 export const Tour = model<ITour>("Tour", tourSchema);
