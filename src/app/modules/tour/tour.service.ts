@@ -1,4 +1,6 @@
 import AppError from "../../errorHelpers/AppError";
+import { excludeField } from "../../global-contants";
+import { searchAbleField } from "./tour.contants";
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 import httpStatus from "http-status-codes";
@@ -57,10 +59,26 @@ const createTour = async (payload: ITour) => {
 
 const getAllTour = async (query: Record<string, string>) => {
   const filter = query;
-  const searchTerm  = query.searchTerm || "";
+  const searchTerm = query.searchTerm || "";
+  const sort = query.sort || "-createdAt";
 
-  delete filter["searchTerm"];
+  //fields filtering
+  const fields = query.fields?.split(",").join(" ") || "";
 
+  //pagination
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 5;
+  const skip = (page - 1) * limit;
+
+  // => deleted other field from filter, otherwise result will empty
+
+  // delete filter["searchTerm"];
+  // delete filter["sort"];
+
+  for (const field of excludeField) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete filter[field];
+  }
 
   // const result = await Tour.find({
   //   $or: [
@@ -70,21 +88,32 @@ const getAllTour = async (query: Record<string, string>) => {
   //   ],
   // });
 
-  const searchAbleField = ["title", "description", "location"];
-
+  //dynamic way
   const searchQuery = {
-    $or: searchAbleField.map((field) => ({[field]: { $regex: searchTerm, $options: "i" },})),
+    $or: searchAbleField.map((field) => ({
+      [field]: { $regex: searchTerm, $options: "i" },
+    })),
   };
 
-  const result = await Tour.find(searchQuery).find(filter);
+  const result = await Tour.find(searchQuery)
+    .find(filter)
+    .sort(sort)
+    .select(fields)
+    .skip(skip)
+    .limit(limit);
 
   const tourCount = await Tour.countDocuments();
+  const totalPage = Math.ceil(tourCount / limit);
 
+  const meta = {
+    page: page,
+    limit: limit,
+    totalPage: totalPage,
+    total: tourCount,
+  };
   return {
+    meta: meta,
     data: result,
-    meta: {
-      total: tourCount,
-    },
   };
 };
 

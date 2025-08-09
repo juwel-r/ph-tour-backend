@@ -18,7 +18,7 @@ const createDivision = async (payload: IDivision) => {
 const getAllDivision = async () => {
   const allDivision = await Division.find({});
   const divisionCount = await Division.countDocuments();
-  return { data: allDivision, meta: { total: divisionCount } };
+  return { meta: { total: divisionCount }, data: allDivision };
 };
 
 const updateDivision = async (id: string, payload: Partial<IDivision>) => {
