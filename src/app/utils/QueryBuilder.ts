@@ -1,5 +1,5 @@
 import { Query } from "mongoose";
-import { excludeField } from "../global-contants";
+import { excludeField } from "../global-constraint";
 
 export class QueryBuilder<T> {
   public modelQuery: Query<T[], T>;
