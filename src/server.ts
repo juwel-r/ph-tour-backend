@@ -9,7 +9,7 @@ let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(envVar.DB_URL_LOCAL);
+    await mongoose.connect(envVar.DB_URL); 
     console.log("Mongoose connected.");
 
     server = app.listen(envVar.PORT, () => {

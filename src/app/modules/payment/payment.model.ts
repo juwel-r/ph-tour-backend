@@ -30,7 +30,8 @@ const paymentSchema = new Schema<IPayment>({
         type: String
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey:false
 })
 
 export const Payment = model<IPayment>("Payment", paymentSchema)
