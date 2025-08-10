@@ -1,9 +1,9 @@
 import AppError from "../../errorHelpers/AppError";
-import { excludeField } from "../../global-contants";
 import { searchAbleField } from "./tour.contants";
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 import httpStatus from "http-status-codes";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
 //--------------------Tour Type --------------------//
 const createTourType = async (payload: ITourType) => {
@@ -57,63 +57,88 @@ const createTour = async (payload: ITour) => {
   return tour;
 };
 
+// const getAllTour = async (query: Record<string, string>) => {
+//   const filter = query;
+//   const searchTerm = query.searchTerm || "";
+//   const sort = query.sort || "-createdAt";
+
+//   //fields filtering
+//   const fields = query.fields?.split(",").join(" ") || "";
+
+//   //pagination
+// const page = Number(query.page) || 1;
+// const limit = Number(query.limit) || 5;
+// const skip = (page - 1) * limit;
+
+//   // => deleted other field from filter, otherwise result will empty
+
+//   // delete filter["searchTerm"];
+//   // delete filter["sort"];
+
+//   for (const field of excludeField) {
+//     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+//     delete filter[field];
+//   }
+
+//   // const result = await Tour.find({
+//   //   $or: [
+//   //     { title: { $regex: searchTerm, $options: "i" } },
+//   //     { description: { $regex: searchTerm, $options: "i" } },
+//   //     { location: { $regex: searchTerm, $options: "i" } },
+//   //   ],
+//   // });
+
+//   //dynamic way
+
+//   const searchQuery = {
+//     $or: searchAbleField.map((field) => ({
+//       [field]: { $regex: searchTerm, $options: "i" },
+//     })),
+//   };
+
+//   // const result = await Tour.find(searchQuery)
+//   //   .find(filter)
+//   //   .sort(sort)
+//   //   .select(fields)
+//   //   .skip(skip)
+//   //   .limit(limit);
+
+//   const filterQuery = Tour.find(filter);
+//   const tours = filterQuery.find(searchQuery);
+//   const result = await tours.sort(sort).select(fields).skip(skip).limit(limit);
+
+  // const tourCount = await Tour.countDocuments();
+  // const totalPage = Math.ceil(tourCount / limit);
+
+  // const meta = {
+  //   page: page,
+  //   limit: limit,
+  //   totalPage: totalPage,
+  //   total: tourCount,
+  // };
+//   return {
+//     meta: meta,
+//     data: result,
+//   };
+// };
+
 const getAllTour = async (query: Record<string, string>) => {
-  const filter = query;
-  const searchTerm = query.searchTerm || "";
-  const sort = query.sort || "-createdAt";
 
-  //fields filtering
-  const fields = query.fields?.split(",").join(" ") || "";
+  const queryBuilder = new QueryBuilder(Tour.find(), query);
 
-  //pagination
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 5;
-  const skip = (page - 1) * limit;
+  const tours = await queryBuilder
+    .filter()
+    .search(searchAbleField)
+    .sort()
+    .fields()
+    .paginate()
+    .build();
 
-  // => deleted other field from filter, otherwise result will empty
+    const meta = await queryBuilder.getMeta()
 
-  // delete filter["searchTerm"];
-  // delete filter["sort"];
-
-  for (const field of excludeField) {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete filter[field];
-  }
-
-  // const result = await Tour.find({
-  //   $or: [
-  //     { title: { $regex: searchTerm, $options: "i" } },
-  //     { description: { $regex: searchTerm, $options: "i" } },
-  //     { location: { $regex: searchTerm, $options: "i" } },
-  //   ],
-  // });
-
-  //dynamic way
-  const searchQuery = {
-    $or: searchAbleField.map((field) => ({
-      [field]: { $regex: searchTerm, $options: "i" },
-    })),
-  };
-
-  const result = await Tour.find(searchQuery)
-    .find(filter)
-    .sort(sort)
-    .select(fields)
-    .skip(skip)
-    .limit(limit);
-
-  const tourCount = await Tour.countDocuments();
-  const totalPage = Math.ceil(tourCount / limit);
-
-  const meta = {
-    page: page,
-    limit: limit,
-    totalPage: totalPage,
-    total: tourCount,
-  };
   return {
-    meta: meta,
-    data: result,
+    meta: {...meta, loaded:tours.length},
+    data: tours,
   };
 };
 

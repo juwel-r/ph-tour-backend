@@ -105,7 +105,18 @@ export default app;
  *  >** must use "express-session" middleware before" passport.initialize" and "passport.session"
  * setup  and dynamic redirect route of frontend in with state by received query in "/api/v1/auth/google" route
  * 
- * === Passport js  for credential login===
+ * === Module 29 -> Passport js  for credential login ===
+ * 
+ * passport js for credential login
+ * handling mongoose error and zod error
+ * create interface for tour and division
+ * 
+ * 
+ * === === Module 30 -> Tour and division === ===
+ * creating slug manually in service
+ * creating slug with schema Pre hooks (query hooks and documents hooks)
+ * Filter, search, limit, skip, pagination, meta and query with manually
+ * Class (query builder) creating for reuse queries
  * 
  * 
  */
