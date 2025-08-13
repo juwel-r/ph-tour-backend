@@ -6,17 +6,19 @@ import httpStatusCodes from "http-status-codes";
 import { Booking } from "./booking.model";
 import { Payment } from "../payment/payment.model";
 import { PAYMENT_STATUS } from "../payment/payment.interface";
+import { SSLService } from "../sslCommerz/sslCommerz.service";
+import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
-    /**
-     * Some instruction about session
-     * 
-     * Session is used rollback transaction purpose. if any error occurred while operation or middle of operation then previous operation will be removed, session normally run operation in virtually after complete full operation then it applied on Database. if found any error while operation running then abort previous actions
-     * 
-     * if used session then must pass payload of .create() as array of object. not in update()
-     * 
-     * session not work in local Mongodb it run always live server
-     */
+  /**
+   * Some instruction about session
+   *
+   * Session is used rollback transaction purpose. if any error occurred while operation or middle of operation then previous operation will be removed, session normally run operation in virtually after complete full operation then it applied on Database. if found any error while operation running then abort previous actions
+   *
+   * if used session then must pass payload of .create() as array of object. not in update()
+   *
+   * session not work in local Mongodb it run always live server
+   */
 
   const session = await Booking.startSession();
   session.startTransaction();
@@ -42,9 +44,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       { session }
     );
 
-    const transactionId = `tran_${Date.now()}_${
-      Math.floor(Math.random()) * 1000
-    }`;
+    const transactionId = `tran_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
     const tour = await Tour.findById(payload.tour).select("costFrom");
 
@@ -70,16 +70,38 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     const updatedBooking = await Booking.findByIdAndUpdate(
       booking[0]._id,
       { payment: payment[0]._id },
-      { new: true, session }
+      { new: true, runValidators:true, session }
     )
       .populate("user", "name email phone address")
       .populate("tour", "title location costFrom")
       .populate("payment", "amount status");
 
+    // amount: number;
+    // transactionId: string;
+    // name: string,
+    // email: string,
+    // phoneNumber: string;
+    // address: string
+    //amount, name, email, address, phoneNumber, transactionId
+
+    const userData = updatedBooking?.user as any;
+    const { name, email, phone, address } = userData;
+
+    const sslPayload: ISSLCommerz = {
+      name,
+      email,
+      phone,
+      address,
+      transactionId,
+      amount,
+    };
+
+    const sslPayment = await SSLService.sslPaymentInit(sslPayload);
+
     await session.commitTransaction(); //transaction
     session.endSession();
 
-    return updatedBooking;
+    return { paymentURL: sslPayment.GatewayPageURL, booking: updatedBooking };
   } catch (error: any) {
     await session.abortTransaction(); //rollback
     session.endSession();

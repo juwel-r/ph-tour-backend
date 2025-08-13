@@ -125,4 +125,6 @@ export default app;
  * use try catch
  * if used session then must pass payload of .create() as array of object. not in update()
  * session not work in local Mongodb it run always live server
+ * 
+ * 31.5, 31.6 -> SSL Commerz Setup
  */
