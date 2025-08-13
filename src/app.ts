@@ -119,4 +119,12 @@ export default app;
  * Class (query builder) creating for reuse queries
  * 
  * 
+ * === === Module 31 -> Tour and division === ===
+ * booking and payment Module
+ * 31.4-> sessionTransaction() used for "rollback transaction"
+ * use try catch
+ * if used session then must pass payload of .create() as array of object. not in update()
+ * session not work in local Mongodb it run always live server
+ * 
+ * 31.5, 31.6 -> SSL Commerz Setup
  */

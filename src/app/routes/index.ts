@@ -3,16 +3,14 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AuthRoute } from "../modules/auth/auth.route";
 import { DivisionRoute } from "../modules/division/division.route";
 import { TourRoute } from "../modules/tour/tour.route";
+import { PaymentRoutes } from "../modules/payment/payment.route";
+import { BookingRoutes } from "../modules/booking/booking.route";
 
 export const router = Router();
 
 const moduleRoutes = [
   {
     path: "/user",
-    route: UserRoutes,
-  },
-  {
-    path: "/",
     route: UserRoutes,
   },
   {
@@ -30,6 +28,14 @@ const moduleRoutes = [
   {
     path: "/tour",
     route: TourRoute,
+  },
+  {
+    path: "/booking",
+    route: BookingRoutes,
+  },
+  {
+    path: "/payment",
+    route: PaymentRoutes,
   },
 ];
 
