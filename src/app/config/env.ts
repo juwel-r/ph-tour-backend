@@ -5,7 +5,6 @@ interface EnvConfig {
   PORT: string;
   DB_URL: string;
   DB_URL_LOCAL: string;
-  //   NODE_ENV: string;
   NODE_ENV: "development" | "production";
   JWT_ACCESS_SECRET: string;
   JWT_ACCESS_EXPIRES: string;
@@ -31,6 +30,9 @@ interface EnvConfig {
     SSL_FAILED_FRONTEND_URL: string;
     SSL_CANCEL_FRONTEND_URL: string;
   };
+  CLOUDINARY_API_SECRET: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_CLOUD_NAME: string;
 }
 
 // export const envVar: EnvConfig = {
@@ -70,6 +72,9 @@ const loadEnvVar = (): EnvConfig => {
     "SSL_SUCCESS_FRONTEND_URL",
     "SSL_FAILED_FRONTEND_URL",
     "SSL_CANCEL_FRONTEND_URL",
+    "CLOUDINARY_API_SECRET",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_CLOUD_NAME",
   ];
   requiredVar.forEach((key) => {
     if (!process.env[key]) {
@@ -107,6 +112,9 @@ const loadEnvVar = (): EnvConfig => {
       SSL_FAILED_FRONTEND_URL: process.env.SSL_FAILED_FRONTEND_URL as string,
       SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL as string,
     },
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
   };
 };
 

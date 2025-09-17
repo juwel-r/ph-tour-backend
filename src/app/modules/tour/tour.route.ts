@@ -9,13 +9,14 @@ import {
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { TourController } from "./tour.controller";
+import { multerUpload } from "../../config/multer";
 
 const router = Router();
 // ---------------------Tour Type-----------------------
 router.post(
   "/create-tour-type",
-  validateRequest(createTourTypeZodSchema),
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  validateRequest(createTourTypeZodSchema),
   TourController.createTourType
 );
 
@@ -23,8 +24,8 @@ router.get("/tour-type", TourController.getTourType);
 
 router.patch(
   "/tour-type/:id",
-  validateRequest(updateTourTypeZodSchema),
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  validateRequest(updateTourTypeZodSchema),
   TourController.updateTourType
 );
 
@@ -37,8 +38,9 @@ router.delete(
 
 router.post(
   "/create",
-  validateRequest(createTourZodSchema),
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array("files"),
+  validateRequest(createTourZodSchema),
   TourController.createTour
 );
 
@@ -47,8 +49,9 @@ router.get("/:id", TourController.getSingleTour);
 
 router.patch(
   "/:id",
-  validateRequest(updateTourZodSchema),
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array("files"),
+  validateRequest(updateTourZodSchema),
   TourController.updateTour
 );
 

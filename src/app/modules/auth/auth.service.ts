@@ -37,6 +37,7 @@ import { envVar } from "../../config/env";
 //   };
 // };
 
+
 //new access token =>
 const getNewAccessToken = async (refreshToken: string) => {
   const newAccessToken = await createAccessTokenWithRefreshToken(refreshToken);
@@ -46,6 +47,7 @@ const getNewAccessToken = async (refreshToken: string) => {
 //Reset Password
 const resetPassword = async (  newPassword: string,  oldPassword: string,  decodedToken: JwtPayload) => {
   const user = await User.findById(decodedToken.userId);
+
   const isOldPassMatched = await bcryptjs.compare(oldPassword, user!.password!);
 
   if (!isOldPassMatched) {

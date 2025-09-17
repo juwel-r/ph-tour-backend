@@ -1,3 +1,4 @@
+import { cloudinaryDelete } from "../../config/cloudinary";
 import AppError from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { searchAbleField } from "./division.constraint";
@@ -34,12 +35,12 @@ const getAllDivision = async (query: Record<string, string>) => {
     .paginate()
     .build();
 
-    const meta = await queryBuilder.getMeta()
+  const meta = await queryBuilder.getMeta();
 
-    return {
-      meta:{...meta, loaded:division.length},
-      data:division
-    }
+  return {
+    meta: { ...meta, loaded: division.length },
+    data: division,
+  };
 };
 
 const updateDivision = async (id: string, payload: Partial<IDivision>) => {
@@ -70,6 +71,13 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
     new: true,
     runValidators: true,
   });
+
+  if (isDivisionExist.thumbnail && payload.thumbnail) {
+    await cloudinaryDelete(isDivisionExist.thumbnail);
+  }
+
+  //ekhane update korar age delete kora jabe na cause, if i deleted old url and then if error occurred while update then no url will be show for this data
+
   return updateDivision;
 };
 
@@ -80,6 +88,10 @@ const deleteDivision = async (id: string) => {
   }
 
   await Division.findByIdAndDelete(id);
+
+  if (isExistDivision.thumbnail) {
+    await cloudinaryDelete(isExistDivision.thumbnail);
+  }
   return null;
 };
 
