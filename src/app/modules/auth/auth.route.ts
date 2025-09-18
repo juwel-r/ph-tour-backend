@@ -8,7 +8,9 @@ const route = Router();
 route.post('/login', AuthController.credentialLogin)
 route.post('/refresh-token', AuthController.getNewAccessToken)
 route.post('/logout', AuthController.logout)
-route.post('/reset-password', checkAuth(...Object.values(Role)), AuthController.resetPassword)
+route.post('/change-password', checkAuth(...Object.values(Role)), AuthController.changePassword);
+route.post('/reset-password', checkAuth(...Object.values(Role)), AuthController.resetPassword);
+route.post('/set-password', checkAuth(...Object.values(Role)), AuthController.setPassword);
 
 //state will received in callback route
 route.get('/google',async (req:Request, res:Response, next:NextFunction)=>{

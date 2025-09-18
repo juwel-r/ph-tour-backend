@@ -8,6 +8,7 @@ import { Payment } from "../payment/payment.model";
 import { PAYMENT_STATUS } from "../payment/payment.interface";
 import { SSLService } from "../sslCommerz/sslCommerz.service";
 import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
+import { getTransactionID } from "../../utils/getTransactionID";
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   /**
@@ -19,6 +20,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
    *
    * session not work in local Mongodb it run always live server
    */
+  const transactionId = getTransactionID();
 
   const session = await Booking.startSession();
   session.startTransaction();
@@ -44,8 +46,6 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       { session }
     );
 
-    const transactionId = `tran_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
-
     const tour = await Tour.findById(payload.tour).select("costFrom");
 
     if (!tour?.costFrom) {
@@ -70,7 +70,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     const updatedBooking = await Booking.findByIdAndUpdate(
       booking[0]._id,
       { payment: payment[0]._id },
-      { new: true, runValidators:true, session }
+      { new: true, runValidators: true, session }
     )
       .populate("user", "name email phone address")
       .populate("tour", "title location costFrom")
