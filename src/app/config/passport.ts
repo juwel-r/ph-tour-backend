@@ -5,7 +5,7 @@ import {
 } from "passport-google-oauth20";
 import { envVar } from "./env";
 import { User } from "../modules/user/user.model";
-import { Role } from "../modules/user/user.interface";
+import { IsActive, Role } from "../modules/user/user.interface";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcryptjs from "bcryptjs";
@@ -31,6 +31,19 @@ import bcryptjs from "bcryptjs";
           }
 
           let user = await User.findOne({ email });
+
+          if (user?.isActive !== IsActive.ACTIVE) {
+            return done(`User is ${user?.isActive}`);
+          }
+
+          if (user?.isDelete) {
+            return done(null, false, { message: "User is deleted."});
+          }
+
+          if (!user?.isVerified) {
+            return done(null, false, { message: "User is not verified."});
+          }
+
           if (!user) {
             user = await User.create({
               email,
@@ -80,6 +93,18 @@ passport.use(
         if (!isUserExist) {
           return done("No user exist with this email!");
         }
+
+        if (isUserExist.isActive !== IsActive.ACTIVE) {
+          done(`User is ${isUserExist.isActive}`);
+        }
+
+        if (isUserExist.isDelete) {
+          return done("User is deleted.");
+        }
+
+        if (!isUserExist.isVerified) {
+          return done("User is not verified.");
+        }
         //done(error, user, info) -> jehetu 1st parameter eroor so just error ta dilei hobe baki gula na dileo hobe
 
         const isGoogleAuthenticated = isUserExist.auth.some(
@@ -90,7 +115,9 @@ passport.use(
         );
 
         if (!isCredentialUser && isGoogleAuthenticated) {
-          return done( "You are Google Authenticated user. Please set password for your account to login with email and password.");
+          return done(
+            "You are Google Authenticated user. Please set password for your account to login with email and password."
+          );
         }
 
         const isPasswordMatch = bcryptjs.compare(

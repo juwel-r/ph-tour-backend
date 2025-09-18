@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
@@ -42,7 +43,6 @@ const getNewAccessToken = async (refreshToken: string) => {
 };
 
 //Reset Password
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resetPassword = async (
   newPassword: string,
   oldPassword: string,
