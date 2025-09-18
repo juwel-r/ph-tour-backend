@@ -40,9 +40,9 @@ import bcryptjs from "bcryptjs";
             return done(null, false, { message: "User is deleted."});
           }
 
-          if (!user?.isVerified) {
-            return done(null, false, { message: "User is not verified."});
-          }
+          // if (!user?.isVerified) {
+          //   return done(null, false, { message: "User is not verified."});
+          // }
 
           if (!user) {
             user = await User.create({
@@ -102,9 +102,9 @@ passport.use(
           return done("User is deleted.");
         }
 
-        if (!isUserExist.isVerified) {
-          return done("User is not verified.");
-        }
+        // if (!isUserExist.isVerified) {
+        //   return done("User is not verified.");
+        // }
         //done(error, user, info) -> jehetu 1st parameter eroor so just error ta dilei hobe baki gula na dileo hobe
 
         const isGoogleAuthenticated = isUserExist.auth.some(

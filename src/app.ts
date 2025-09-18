@@ -165,4 +165,11 @@ export default app;
  * multer config with multer-storage-cloudinary
  * update validateRequest for received file
  * app middleware in app.ts for formdata
+ * upload single and multiple photo in cloudinary
+ *  and delete single and multiple photo from cloudinary
+ * delete uploaded photo from cloudinary if any error occurred white execution
+ * 
+ * created set password api reset password api forgot api and send forgot link via email by using nodemailer
+ * config nodemailer with google "App Password"
+ * 
  */

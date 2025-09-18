@@ -1,16 +1,13 @@
 import AppError from "../errorHelpers/AppError";
 import { IsActive } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
-import httpStatus from 'http-status-codes'
+import httpStatus from "http-status-codes";
 
-export const isUserExistOrActive =async (email:string)=>{
+export const isUserExistOrActive = async (email: string) => {
   const isUserExist = await User.findOne({ email: email });
 
   if (!isUserExist) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `No user exist with ${email}`
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, `No user exist with ${email}`);
   }
 
   if (isUserExist.isActive !== IsActive.ACTIVE || isUserExist.isDelete) {
@@ -20,5 +17,5 @@ export const isUserExistOrActive =async (email:string)=>{
     );
   }
 
-  return isUserExist
-}
+  return isUserExist;
+};
