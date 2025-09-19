@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { envVar } from "./env";
+import { envVar } from "./env.config";
 import AppError from "../errorHelpers/AppError";
 
 cloudinary.config({

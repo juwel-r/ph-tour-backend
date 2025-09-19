@@ -1,4 +1,4 @@
-import { cloudinaryDelete } from "../../config/cloudinary";
+import { cloudinaryDelete } from "../../config/cloudinary.config";
 import AppError from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { searchAbleField } from "./division.constraint";

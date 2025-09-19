@@ -3,7 +3,7 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { envVar } from "./env";
+import { envVar } from "./env.config";
 import { User } from "../modules/user/user.model";
 import { IsActive, Role } from "../modules/user/user.interface";
 import passport from "passport";
@@ -37,7 +37,7 @@ import bcryptjs from "bcryptjs";
           }
 
           if (user?.isDelete) {
-            return done(null, false, { message: "User is deleted."});
+            return done(null, false, { message: "User is deleted." });
           }
 
           // if (!user?.isVerified) {

@@ -6,7 +6,7 @@ import { NotFoundRoute } from "./app/middlewares/notFound";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import expressSession from "express-session";
-import "./app/config/passport";
+import "./app/config/passport.config";
 
 const app = express();
 
@@ -159,7 +159,7 @@ export default app;
  * 31.5, 31.6 -> SSL Commerz Setup
  * 
  * 
- * === === Module 32- Cloudinary Setup === ===
+ * === === Module 32- Cloudinary Setup and node mailer setup === ===
  * 
  * Cloudinary config
  * multer config with multer-storage-cloudinary
@@ -171,5 +171,8 @@ export default app;
  * 
  * created set password api reset password api forgot api and send forgot link via email by using nodemailer
  * config nodemailer with google "App Password"
+ * 
+ *  * === === Module 33- Redis Setup === ===
+ * config redis and set connect in server.ts
  * 
  */

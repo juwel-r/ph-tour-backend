@@ -7,9 +7,9 @@ import {
   updateDivisionSchema,
 } from "./division.validation";
 import { DivisionController } from "./division.controller";
-import { multerUpload } from "../../config/multer";
+import { multerUpload } from "../../config/multer.config";
 
-const router = express.Router();
+const router = express.Router(); 
 
 router.post(
   "/create",

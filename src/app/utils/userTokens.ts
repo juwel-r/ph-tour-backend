@@ -1,11 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
-import { envVar } from "../config/env";
+import { envVar } from "../config/env.config";
 import { generateToken, verifyToken } from "./jwt";
 import { isUserExistOrActive } from "./isUserExistOrActive";
 import { IUser } from "../modules/user/user.interface";
 
 export const createUserTokens = (user: Partial<IUser>) => {
-
   const jwtPayload: JwtPayload = {
     userId: user._id,
     email: user.email,
@@ -28,8 +27,9 @@ export const createUserTokens = (user: Partial<IUser>) => {
 };
 
 //create Access Token With Refresh Token if access Token expired
-export const createAccessTokenWithRefreshToken = async (refreshToken: string) => {
-  
+export const createAccessTokenWithRefreshToken = async (
+  refreshToken: string
+) => {
   const verifiedRefreshToken = verifyToken(
     refreshToken,
     envVar.JWT_REFRESH_SECRET
