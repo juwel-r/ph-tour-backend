@@ -21,3 +21,13 @@ export interface SendEmailOptions {
     }
   ];
 }
+
+
+export interface IInvoiceData {
+  transactionId: string;
+  bookingDate: Date;
+  customerName: string;
+  tourTitle: string;
+  guestCount: number;
+  totalCost: number;
+}

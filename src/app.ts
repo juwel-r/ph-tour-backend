@@ -174,5 +174,10 @@ export default app;
  * 
  *  * === === Module 33- Redis Setup === ===
  * config redis and set connect in server.ts
+ * generate otp and verify
+ * 
+* create a Invoice pdf using "pdfkit" send invoice pdf via email
+* upload pdf in cloudinary (must need to enable pdf and zip sharing in cloudinary)
+* create a api for get invoice pdf
  * 
  */

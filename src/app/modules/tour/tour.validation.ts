@@ -13,7 +13,7 @@ export const createTourZodSchema = z.object({
   location: z.string().optional(),
   departureLocation: z.string().optional(),
   arrivalLocation: z.string().optional(),
-  costFrom: z.number().optional(),
+  costFrom: z.number(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   included: z.array(z.string()).optional(),
