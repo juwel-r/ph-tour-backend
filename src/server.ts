@@ -32,9 +32,6 @@ async function main() {
   }
 })();
 
-//==>> Error Handler
-// See details about error handler => '../___notes.js'
-
 process.on("uncaughtException", (error) => {
   console.log(
     "uncaughtException error detected, server shutting down!",

@@ -61,6 +61,7 @@ import bcryptjs from "bcryptjs";
           }
           return done(null, user);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.log("Google Strategy Error", error);
           return done(error);
         }
@@ -96,6 +97,10 @@ passport.use(
 
         if (isUserExist.isActive !== IsActive.ACTIVE) {
           done(`User is ${isUserExist.isActive}`);
+        }
+
+        if (!isUserExist.isVerified) {
+          done(`User email is not verified.`);
         }
 
         if (isUserExist.isDelete) {

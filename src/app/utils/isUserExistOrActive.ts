@@ -10,11 +10,15 @@ export const isUserExistOrActive = async (email: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, `No user exist with ${email}`);
   }
 
-  if (isUserExist.isActive !== IsActive.ACTIVE || isUserExist.isDelete) {
+  if (isUserExist.isActive !== IsActive.ACTIVE) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "User Inactive or Blocked or Deleted."
+      `This user is ${isUserExist.isActive}`
     );
+  }
+
+  if (isUserExist.isDelete) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user is Deleted.");
   }
 
   return isUserExist;
