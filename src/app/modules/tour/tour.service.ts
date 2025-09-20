@@ -4,6 +4,7 @@ import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 import httpStatus from "http-status-codes";
 import { QueryBuilder } from "../../utils/QueryBuilder";
+import { cloudinaryDelete } from "../../config/cloudinary";
 
 //--------------------Tour Type --------------------//
 const createTourType = async (payload: ITourType) => {
@@ -90,11 +91,11 @@ const createTour = async (payload: ITour) => {
 
 //   //dynamic way
 
-//   const searchQuery = {
-//     $or: searchAbleField.map((field) => ({
-//       [field]: { $regex: searchTerm, $options: "i" },
-//     })),
-//   };
+// const searchQuery = {
+//   $or: searchAbleField.map((field) => ({
+//     [field]: { $regex: searchTerm, $options: "i" },
+//   })),
+// };
 
 //   // const result = await Tour.find(searchQuery)
 //   //   .find(filter)
@@ -107,15 +108,15 @@ const createTour = async (payload: ITour) => {
 //   const tours = filterQuery.find(searchQuery);
 //   const result = await tours.sort(sort).select(fields).skip(skip).limit(limit);
 
-  // const tourCount = await Tour.countDocuments();
-  // const totalPage = Math.ceil(tourCount / limit);
+// const tourCount = await Tour.countDocuments();
+// const totalPage = Math.ceil(tourCount / limit);
 
-  // const meta = {
-  //   page: page,
-  //   limit: limit,
-  //   totalPage: totalPage,
-  //   total: tourCount,
-  // };
+// const meta = {
+//   page: page,
+//   limit: limit,
+//   totalPage: totalPage,
+//   total: tourCount,
+// };
 //   return {
 //     meta: meta,
 //     data: result,
@@ -123,7 +124,6 @@ const createTour = async (payload: ITour) => {
 // };
 
 const getAllTour = async (query: Record<string, string>) => {
-
   const queryBuilder = new QueryBuilder(Tour.find(), query);
 
   const tours = await queryBuilder
@@ -134,29 +134,57 @@ const getAllTour = async (query: Record<string, string>) => {
     .paginate()
     .build();
 
-    const meta = await queryBuilder.getMeta()
+  const meta = await queryBuilder.getMeta();
 
   return {
-    meta: {...meta, loaded:tours.length},
+    meta: { ...meta, loaded: tours.length },
     data: tours,
   };
 };
 
 const updateTour = async (id: string, payload: Partial<ITour>) => {
   const isTourExist = await Tour.findById(id);
+
+  //if user only add images
+  if (payload.images?.length && isTourExist?.images?.length) {
+    payload.images = [...isTourExist.images, ...payload.images];
+  }
+
+  //if user  delete images
+  if (payload.deleteImages?.length && isTourExist?.images?.length) {
+    const remainingImages = isTourExist.images.filter(
+      (img) => !payload.deleteImages?.includes(img)
+    );
+
+    const updatePayloadImg = (payload.images || [])
+      .filter((img) => !payload.deleteImages?.includes(img))
+      .filter((img) => !remainingImages.includes(img));
+
+    /**
+      payload.images = 1234
+      isTourExist.images =5678
+      payload.delete=56
+
+      remainingImages = 78
+      updatePayloadImg = 12345678 -> 123478 ->1234
+       */
+
+    payload.images = [...remainingImages, ...updatePayloadImg];
+    // mean that, if user delete and add images --> 1st filter and select undeleted urls, then add new images (payload.images) array with previously remainingImages
+  }
+
   if (!isTourExist) {
     throw new AppError(httpStatus.NOT_FOUND, "No tour found to update.");
   }
-
-  //   if (payload.title) {
-  //     const baseSlug = payload.title.toLocaleLowerCase().split(" ").join("-");
-  //     payload.slug = baseSlug;
-  //   }
 
   const updateTour = await Tour.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
+
+  if (payload.deleteImages?.length && isTourExist?.images?.length) {
+    await Promise.all(payload.deleteImages.map((url) => cloudinaryDelete(url)));
+  }
 
   return updateTour;
 };

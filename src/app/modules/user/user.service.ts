@@ -37,10 +37,21 @@ const createUser = async (payload: Partial<IUser>) => {
 
 // Get All Users
 const getAllUsers = async () => {
-  const users = await User.find({});
+  const users = await User.find({}).select("-password");
 
   const totalUsers = await User.countDocuments();
   return { data: users, meta: { total: totalUsers } };
+};
+
+const getSingleUser = async (id: string) => {
+  const user = await User.findById(id).select("-password");
+
+  return user;
+};
+
+const getMe = async (id: string) => {
+  const user = await User.findById(id).select("-password");
+  return user;
 };
 
 //Update User
@@ -51,7 +62,6 @@ const updateUser = async (
 ) => {
   const isUserExist = await User.findById(userId);
 
-  
   if (!isUserExist) {
     throw new AppError(
       httpStatusCodes.NOT_FOUND,
@@ -107,4 +117,6 @@ export const UserService = {
   createUser,
   getAllUsers,
   updateUser,
+  getSingleUser,
+  getMe,
 };

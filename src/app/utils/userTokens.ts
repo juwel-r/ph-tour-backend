@@ -5,6 +5,7 @@ import { isUserExistOrActive } from "./isUserExistOrActive";
 import { IUser } from "../modules/user/user.interface";
 
 export const createUserTokens = (user: Partial<IUser>) => {
+
   const jwtPayload: JwtPayload = {
     userId: user._id,
     email: user.email,
@@ -26,9 +27,9 @@ export const createUserTokens = (user: Partial<IUser>) => {
   return { accessToken, refreshToken };
 };
 
-export const createAccessTokenWithRefreshToken = async (
-  refreshToken: string
-) => {
+//create Access Token With Refresh Token if access Token expired
+export const createAccessTokenWithRefreshToken = async (refreshToken: string) => {
+  
   const verifiedRefreshToken = verifyToken(
     refreshToken,
     envVar.JWT_REFRESH_SECRET

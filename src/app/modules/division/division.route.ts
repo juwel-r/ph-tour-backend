@@ -7,12 +7,14 @@ import {
   updateDivisionSchema,
 } from "./division.validation";
 import { DivisionController } from "./division.controller";
+import { multerUpload } from "../../config/multer";
 
 const router = express.Router();
 
 router.post(
   "/create",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  // checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.single("file"),
   validateRequest(createDivisionSchema),
   DivisionController.createDivision
 );
@@ -24,6 +26,7 @@ router.get("/:slug", DivisionController.getSingleDivision);
 router.patch(
   "/:id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.single("file"),
   validateRequest(updateDivisionSchema),
   DivisionController.updateDivision
 );

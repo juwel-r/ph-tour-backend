@@ -4,9 +4,14 @@ import { DivisionServices } from "./division.service";
 import httpStatus from "http-status-codes";
 import { sendResponse } from "../../utils/sendResponse";
 import { Division } from "./division.model";
+import { IDivision } from "./division.interface";
 
 const createDivision = catchAsync(async (req: Request, res: Response) => {
-  const division = await DivisionServices.createDivision(req.body);
+  const payload: IDivision = {
+    ...req.body,
+    thumbnail: req.file?.path,
+  };
+  const division = await DivisionServices.createDivision(payload);
 
   sendResponse(res, {
     success: true,
@@ -17,14 +22,16 @@ const createDivision = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllDivision = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query
-  const result = await DivisionServices.getAllDivision(query as Record<string, string>);
-  
+  const query = req.query;
+  const result = await DivisionServices.getAllDivision(
+    query as Record<string, string>
+  );
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "All division Retrieved.",
-    meta:result.meta,
+    meta: result.meta,
     data: result.data,
   });
 });
@@ -42,7 +49,7 @@ const getSingleDivision = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateDivision = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
+  const payload: IDivision = { ...req.body, thumbnail: req.file?.path };
   const id = req.params.id;
   const updateDivision = await DivisionServices.updateDivision(id, payload);
 
@@ -53,7 +60,6 @@ const updateDivision = catchAsync(async (req: Request, res: Response) => {
     data: updateDivision,
   });
 });
-
 
 const deleteDivision = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -66,8 +72,6 @@ const deleteDivision = catchAsync(async (req: Request, res: Response) => {
     data: deleteDivision,
   });
 });
-
-
 
 export const DivisionController = {
   createDivision,

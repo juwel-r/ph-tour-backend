@@ -4,14 +4,27 @@ import { envVar } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { handleCastError, handleDuplicateError, handleValidationError } from "../errorHelpers/mongooseError";
 import { handleZodError } from "../errorHelpers/zodError";
+import { cloudinaryDelete } from "../config/cloudinary";
 
 
-export const globalErrorHandler = (error: any,req: Request,res: Response,next: NextFunction) => {
-
+export const globalErrorHandler =async (error: any,req: Request,res: Response,next: NextFunction) => {
   if(envVar.NODE_ENV === "development" ? error.stack : null){
+    // eslint-disable-next-line no-console
     console.log(error);
   }
 
+//Cloudinary image delete if error occurred while execution
+  if(req.file){
+    await cloudinaryDelete(req.file.path)
+  }
+
+  if(req.files && Number(req.files.length) > 0){
+    const urls = (req.files as Express.Multer.File[]).map(file => file.path);
+
+    await Promise.all(urls.map(url=>cloudinaryDelete(url)))
+  }
+
+  //Error handle
   let statusCode = 500;
   let message = error.message;
 

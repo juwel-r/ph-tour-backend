@@ -1,4 +1,4 @@
-//(...authRoles:string[]) -> ata holo ai middleware ta je route ar jonno use kora hobe sei route ta kon typer user ar jonno accescible, route theke seta param hisabe patabe
+//(...authRoles:string[]) -> ata holo ai middleware ta je route ar jonno use kora hobe sei route ta kon typer user ar jonno accessible, route theke seta param hisabe patabe
 
 import { JwtPayload } from "jsonwebtoken";
 import { envVar } from "../config/env";
@@ -9,7 +9,7 @@ import { isUserExistOrActive } from "../utils/isUserExistOrActive";
 
 export const checkAuth =
   (...authRoles: string[]) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       // const accessToken = req.cookies.accessToken;
       const accessToken = req.headers.authorization;
@@ -24,7 +24,7 @@ export const checkAuth =
         envVar.JWT_ACCESS_SECRET
       ) as JwtPayload;
 
-      isUserExistOrActive(verifiedToken.email);
+      await isUserExistOrActive(verifiedToken.email);
 
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(

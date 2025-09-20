@@ -14,9 +14,8 @@ import { IUser } from "../user/user.interface";
 
 const credentialLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-
     // // === >> this is manual login system by using "AuthServices.credentialLogin"
-    // const loginInfo = await AuthServices.credentialLogin(req.body); 
+    // const loginInfo = await AuthServices.credentialLogin(req.body);
 
     //Try passport js local login system
     passport.authenticate("local", (err: any, user: any, info: any) => {
@@ -104,9 +103,24 @@ const logout = catchAsync(
 //Reset Password =>
 const resetPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+
+    await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCodes.OK,
+      message: "Password reset successfully.",
+      data: null,
+    });
+  }
+);
+
+const changePassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { newPassword, oldPassword } = req.body;
     const decodedToken = req.user;
-    const updatePassword = await AuthServices.resetPassword(
+    const updatePassword = await AuthServices.changePassword(
       newPassword,
       oldPassword,
       decodedToken as JwtPayload
@@ -116,6 +130,35 @@ const resetPassword = catchAsync(
       success: true,
       statusCode: httpStatusCodes.OK,
       message: "Password changed successfully.",
+      data: null,
+    });
+  }
+);
+
+const setPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { password } = req.body;
+    const decodedToken = req.user as JwtPayload;
+    await AuthServices.setPassword(decodedToken.userId, password);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCodes.OK,
+      message: "Password set successfully.",
+      data: null,
+    });
+  }
+);
+
+const forgotPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    await AuthServices.forgotPassword(email);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatusCodes.OK,
+      message: "Password recovery email sent successfully.",
       data: null,
     });
   }
@@ -143,6 +186,9 @@ export const AuthController = {
   credentialLogin,
   getNewAccessToken,
   logout,
+  changePassword,
+  setPassword,
+  forgotPassword,
   resetPassword,
   googleCallback,
 };

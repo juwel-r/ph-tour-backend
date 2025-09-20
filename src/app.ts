@@ -20,6 +20,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); //for form data
 app.use(cookieParser());
 app.use(cors());
 app.use("/api/v1", router);
@@ -34,6 +35,29 @@ app.use(globalErrorHandler);
 app.use(NotFoundRoute);
 
 export default app;
+
+/** => Project Setup
+ *
+ * git init
+ * .gitignore file create
+ * npm init -y
+ * npm i -D typescript
+ * tsc --init
+ * ->set root dir and outdir
+ * install required packages
+ * install all installed packages types -> @types/express
+ * npm i -D ts-node-dev
+ *
+ * server.ts and app.ts file setup
+ *
+ * SIGTERM, uncaughtException, unhandledRejection error handle in server.ts
+ *
+ * TS Eslint setup
+ *
+ * EnvConfig Setup
+ *
+ *
+ */
 
 //Progress
 /**
@@ -78,7 +102,13 @@ export default app;
  * Module Summary ==>> Module 27 <<====
  * 8. Create a middleware for validating request via Zod and use that on router file.
  * 9. Hash Password to create login API.
- * 10. JWT Setup -> create a middleware (checkAuth)
+ * 10. JWT Setup -> 
+ *        create accessToken and refreshToken
+ *        
+ *        
+ * 
+ * 
+ * create a middleware (checkAuth)
  * 11. Create a API for Update User and validate permissions, must set validation middleware in route which made with ZOD
  * 12. Create a seedSuperAdmin to create a Super Admin Role in database at initiate of Server.
  * 13. Create custom Global Type for Express Request (req.user) and applied store verifiedToken data in req.user
@@ -127,4 +157,19 @@ export default app;
  * session not work in local Mongodb it run always live server
  * 
  * 31.5, 31.6 -> SSL Commerz Setup
+ * 
+ * 
+ * === === Module 32- Cloudinary Setup === ===
+ * 
+ * Cloudinary config
+ * multer config with multer-storage-cloudinary
+ * update validateRequest for received file
+ * app middleware in app.ts for formdata
+ * upload single and multiple photo in cloudinary
+ *  and delete single and multiple photo from cloudinary
+ * delete uploaded photo from cloudinary if any error occurred white execution
+ * 
+ * created set password api reset password api forgot api and send forgot link via email by using nodemailer
+ * config nodemailer with google "App Password"
+ * 
  */
