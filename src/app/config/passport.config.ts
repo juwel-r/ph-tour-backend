@@ -136,6 +136,7 @@ passport.use(
 
         return done(null, isUserExist);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log(error);
         done(error);
       }
