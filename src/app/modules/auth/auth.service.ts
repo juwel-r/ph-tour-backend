@@ -6,7 +6,7 @@ import bcryptjs from "bcryptjs";
 import { createAccessTokenWithRefreshToken } from "../../utils/userTokens";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "../user/user.model";
-import { envVar } from "../../config/env";
+import { envVar } from "../../config/env.config";
 import { AuthProvider } from "../user/user.interface";
 import { isUserExistOrActive } from "../../utils/isUserExistOrActive";
 import { generateToken } from "../../utils/jwt";

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { envVar } from "../config/env";
+import { envVar } from "../config/env.config";
 import { AuthProvider, IUser, Role } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import bcryptjs from "bcryptjs";
@@ -40,4 +40,3 @@ export const seedSuperAdmin = async () => {
     console.log(error);
   }
 };
- 

@@ -2,12 +2,11 @@ import axios from "axios";
 import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
 import { ISSLCommerz } from "./sslCommerz.interface";
-import { envVar } from "../../config/env";
+import { envVar } from "../../config/env.config";
 import { sslPaymentUrl } from "../../utils/sslPaymentUrl";
 
 const sslPaymentInit = async (payload: ISSLCommerz) => {
   const { amount, name, email, address, phone, transactionId } = payload;
-
 
   try {
     const data = {
@@ -16,9 +15,9 @@ const sslPaymentInit = async (payload: ISSLCommerz) => {
       total_amount: amount,
       currency: "BDT",
       tran_id: transactionId,
-      success_url: sslPaymentUrl("SUCCESS_BACKEND",transactionId, amount),
-      fail_url: sslPaymentUrl("FAILED_BACKEND",transactionId, amount),
-      cancel_url: sslPaymentUrl("CANCEL_BACKEND",transactionId,amount),
+      success_url: sslPaymentUrl("SUCCESS_BACKEND", transactionId, amount),
+      fail_url: sslPaymentUrl("FAILED_BACKEND", transactionId, amount),
+      cancel_url: sslPaymentUrl("CANCEL_BACKEND", transactionId, amount),
       // ipn_url: "http://localhost:3030/ipn",
       shipping_method: "N/A",
       product_name: "Tour",

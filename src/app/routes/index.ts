@@ -5,6 +5,7 @@ import { DivisionRoute } from "../modules/division/division.route";
 import { TourRoute } from "../modules/tour/tour.route";
 import { PaymentRoutes } from "../modules/payment/payment.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
+import { OtpRoutes } from "../modules/otp/otp.route";
 
 export const router = Router();
 
@@ -36,6 +37,10 @@ const moduleRoutes = [
   {
     path: "/payment",
     route: PaymentRoutes,
+  },
+  {
+    path: "/otp",
+    route: OtpRoutes,
   },
 ];
 

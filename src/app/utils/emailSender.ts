@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 import nodemailer from "nodemailer";
-import { envVar } from "../config/env";
+import { envVar } from "../config/env.config";
 import path from "path";
 import ejs from "ejs";
 import AppError from "../errorHelpers/AppError";
+import { SendEmailOptions } from "../interfaces";
+
 const transport = nodemailer.createTransport({
   host: envVar.SMTP_HOST,
   port: Number(envVar.SMTP_PORT),
@@ -12,20 +15,6 @@ const transport = nodemailer.createTransport({
     pass: envVar.SMTP_PASS,
   },
 });
-
-interface SendEmailOptions {
-  to: string;
-  subject: string;
-  templateName: string;
-  templateData?: Record<string, any>;
-  attachments?: [
-    {
-      filename: string;
-      content: Buffer | string;
-      contentType: string;
-    }
-  ];
-}
 
 export const sendEmail = async ({
   to,

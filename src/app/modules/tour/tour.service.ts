@@ -4,7 +4,7 @@ import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 import httpStatus from "http-status-codes";
 import { QueryBuilder } from "../../utils/QueryBuilder";
-import { cloudinaryDelete } from "../../config/cloudinary";
+import { cloudinaryDelete } from "../../config/cloudinary.config";
 
 //--------------------Tour Type --------------------//
 const createTourType = async (payload: ITourType) => {

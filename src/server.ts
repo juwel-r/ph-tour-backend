@@ -2,14 +2,15 @@
 import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
-import { envVar } from "./app/config/env";
+import { envVar } from "./app/config/env.config";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
+import { connectRedis } from "./app/config/redis.config";
 
 let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(envVar.DB_URL); 
+    await mongoose.connect(envVar.DB_URL);
     console.log("Mongoose connected.");
 
     server = app.listen(envVar.PORT, () => {
@@ -22,6 +23,7 @@ async function main() {
 
 (async () => {
   try {
+    await connectRedis();
     await main();
     await seedSuperAdmin();
   } catch (error) {
@@ -29,9 +31,6 @@ async function main() {
     process.exit(1);
   }
 })();
-
-//==>> Error Handler
-// See details about error handler => '../___notes.js'
 
 process.on("uncaughtException", (error) => {
   console.log(

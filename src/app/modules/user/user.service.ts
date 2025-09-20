@@ -3,7 +3,7 @@ import { AuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import httpStatusCodes from "http-status-codes";
 import bctyptjs from "bcryptjs";
-import { envVar } from "../../config/env";
+import { envVar } from "../../config/env.config";
 import { JwtPayload } from "jsonwebtoken";
 
 const createUser = async (payload: Partial<IUser>) => {

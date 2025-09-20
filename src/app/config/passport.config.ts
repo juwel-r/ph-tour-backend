@@ -3,7 +3,7 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { envVar } from "./env";
+import { envVar } from "./env.config";
 import { User } from "../modules/user/user.model";
 import { IsActive, Role } from "../modules/user/user.interface";
 import passport from "passport";
@@ -37,7 +37,7 @@ import bcryptjs from "bcryptjs";
           }
 
           if (user?.isDelete) {
-            return done(null, false, { message: "User is deleted."});
+            return done(null, false, { message: "User is deleted." });
           }
 
           // if (!user?.isVerified) {
@@ -61,6 +61,7 @@ import bcryptjs from "bcryptjs";
           }
           return done(null, user);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.log("Google Strategy Error", error);
           return done(error);
         }
@@ -98,6 +99,10 @@ passport.use(
           done(`User is ${isUserExist.isActive}`);
         }
 
+        if (!isUserExist.isVerified) {
+          done(`User email is not verified.`);
+        }
+
         if (isUserExist.isDelete) {
           return done("User is deleted.");
         }
@@ -131,6 +136,7 @@ passport.use(
 
         return done(null, isUserExist);
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log(error);
         done(error);
       }

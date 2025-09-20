@@ -9,7 +9,7 @@ import {
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { TourController } from "./tour.controller";
-import { multerUpload } from "../../config/multer";
+import { multerUpload } from "../../config/multer.config";
 
 const router = Router();
 // ---------------------Tour Type-----------------------
@@ -44,7 +44,7 @@ router.post(
   TourController.createTour
 );
 
-router.get("/", TourController.getAllTour);
+router.get("/",checkAuth(Role.ADMIN, Role.SUPER_ADMIN), TourController.getAllTour);
 router.get("/:id", TourController.getSingleTour);
 
 router.patch(

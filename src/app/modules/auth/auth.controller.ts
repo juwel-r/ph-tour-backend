@@ -7,7 +7,7 @@ import { AuthServices } from "./auth.service";
 import AppError from "../../errorHelpers/AppError";
 import { setCookieAuth } from "../../utils/setCookie";
 import { createUserTokens } from "../../utils/userTokens";
-import { envVar } from "../../config/env";
+import { envVar } from "../../config/env.config";
 import { JwtPayload } from "jsonwebtoken";
 import passport from "passport";
 import { IUser } from "../user/user.interface";

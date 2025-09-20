@@ -1,7 +1,7 @@
 //(...authRoles:string[]) -> ata holo ai middleware ta je route ar jonno use kora hobe sei route ta kon typer user ar jonno accessible, route theke seta param hisabe patabe
 
 import { JwtPayload } from "jsonwebtoken";
-import { envVar } from "../config/env";
+import { envVar } from "../config/env.config";
 import AppError from "../errorHelpers/AppError";
 import { verifyToken } from "../utils/jwt";
 import { NextFunction, Request, Response } from "express";
