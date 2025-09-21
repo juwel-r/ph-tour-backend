@@ -45,9 +45,23 @@ const cancelPayment = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+const invoicePDF = catchAsync(async (req: Request, res: Response) => {
+  const transactionId = req.params.transactionId;
+
+  const result = await PaymentService.invoicePDF(transactionId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Payment URL Generate successful.",
+    data: result,
+  });
+});
+
 export const PaymentController = {
   initPayment,
   successPayment,
   failedPayment,
   cancelPayment,
+  invoicePDF
 };

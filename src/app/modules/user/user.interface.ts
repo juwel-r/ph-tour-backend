@@ -30,6 +30,7 @@ export interface IUser {
   isVerified?: boolean;
   isDelete?: boolean;
   auth: AuthProvider[];
+  createdAt?:Date
   // bookings: Types.ObjectId[];
   // guides: Types.ObjectId[];
 }
