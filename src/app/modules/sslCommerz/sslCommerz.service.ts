@@ -63,7 +63,7 @@ const validatePayment = async (payload: any) => {
   });
 
   // eslint-disable-next-line no-console
-  console.log({ ipn_url_response: payload, validate_response: response.data });
+  console.log({ validate_response: response.data });
 
   await Payment.updateOne(
     { transactionId: payload.tran_id },
@@ -74,7 +74,6 @@ const validatePayment = async (payload: any) => {
    1st sslCommerz will call a api which is created in payment -> "payment/validate-payment", then sslCommerz send some data with api req.body as payload (including "val_id"). sslServices.validatePayment() called from payment module and passed argument "req.body" which sslCommerz send, here i received as payload 
    */
 
-  return {};
 };
 
 export const SSLService = {

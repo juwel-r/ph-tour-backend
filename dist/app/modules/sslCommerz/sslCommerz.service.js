@@ -72,12 +72,11 @@ const validatePayment = (payload) => __awaiter(void 0, void 0, void 0, function*
         url: `${env_config_1.envVar.SSL.SSL_VALIDATION_API}?val_id=${payload.val_id}&store_id=${env_config_1.envVar.SSL.SSL_STORE_ID}&store_passwd=${env_config_1.envVar.SSL.SSL_STORE_PASS}`,
     });
     // eslint-disable-next-line no-console
-    console.log({ ipn_url_response: payload, validate_response: response.data });
+    console.log({ validate_response: response.data });
     yield payment_model_1.Payment.updateOne({ transactionId: payload.tran_id }, { paymentGatewayData: response.data });
     /**
      1st sslCommerz will call a api which is created in payment -> "payment/validate-payment", then sslCommerz send some data with api req.body as payload (including "val_id"). sslServices.validatePayment() called from payment module and passed argument "req.body" which sslCommerz send, here i received as payload
      */
-    return {};
 });
 exports.SSLService = {
     sslPaymentInit,
