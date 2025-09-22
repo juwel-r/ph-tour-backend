@@ -51,6 +51,8 @@ const initPayment = async (bookingId: string) => {
   }
 };
 
+
+//generate invoice PDF, send invoice email, save pdf to cloudinary, save pdf url to db
 const successPayment = async (transactionId: string) => {
   const session = await Booking.startSession();
   session.startTransaction();
@@ -181,9 +183,22 @@ const cancelPayment = async (transactionId: string) => {
   }
 };
 
+const invoicePDF = async (transactionId:string)=>{
+
+  const paymentData = await Payment.findOne({transactionId}).select("invoiceUrl");
+
+  if(!paymentData){
+    throw new AppError(404, "Payment invoice pdf url not found.")
+  }
+
+  return paymentData;
+
+}
+
 export const PaymentService = {
   initPayment,
   successPayment,
   failedPayment,
   cancelPayment,
+  invoicePDF
 };

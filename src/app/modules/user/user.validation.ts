@@ -36,16 +36,18 @@ export const updateUserZodSchema = z.object({
     .min(2, { message: "Name at-least 2 character" })
     .max(20, { message: "Name can't exceed 20 character" })
     .optional(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 character" })
-    .regex(/[a-z]/, { message: "Must include a lowercase letter." })
-    .regex(/[A-Z]/, { message: "Must include an uppercase letter." })
-    .regex(/\d/, { message: "Must include a digit." })
-    .regex(/[!@#$%^&*()_+{}\\[\]:;"'<>,.?/~\\|-]/, {
-      message: "Must include a special character.",
-    })
-    .optional(),
+  // password: z
+  //   .string()
+  //   .min(8, { message: "Password must be at least 8 character" })
+  //   .regex(/[a-z]/, { message: "Must include a lowercase letter." })
+  //   .regex(/[A-Z]/, { message: "Must include an uppercase letter." })
+  //   .regex(/\d/, { message: "Must include a digit." })
+  //   .regex(/[!@#$%^&*()_+{}\\[\]:;"'<>,.?/~\\|-]/, {
+  //     message: "Must include a special character.",
+  //   })
+  //   .optional(),
+
+  //an api has created dedicated only for password change
   phone: z
     .string()
     .regex(/^(?:\+88|88)?01[3-9]\d{8}$/, {

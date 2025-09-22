@@ -22,6 +22,7 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //for form data
 app.use(cookieParser());
+app.set("true proxy", 1);
 app.use(cors());
 app.use("/api/v1", router);
 
@@ -179,5 +180,11 @@ export default app;
 * create a Invoice pdf using "pdfkit" send invoice pdf via email
 * upload pdf in cloudinary (must need to enable pdf and zip sharing in cloudinary)
 * create a api for get invoice pdf
+* 
+* create stats for user booking payment
+* 
+* need to modify secure:true for production and sameSite:"none" and config cors and set trust proxy
+* deploy to vercel 
+* 
  * 
  */
