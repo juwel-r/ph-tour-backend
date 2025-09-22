@@ -4,6 +4,7 @@ import { PaymentService } from "./payment.service";
 import { sslPaymentUrl } from "../../utils/sslPaymentUrl";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
+import { SSLService } from "../sslCommerz/sslCommerz.service";
 
 const initPayment = catchAsync(async (req: Request, res: Response) => {
   const { bookingId } = req.params;
@@ -58,10 +59,22 @@ const invoicePDF = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const validatePayment = catchAsync(async (req: Request, res: Response) => {
+  await SSLService.validatePayment(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Payment validation successful.",
+    data: null,
+  });
+});
+
 export const PaymentController = {
   initPayment,
   successPayment,
   failedPayment,
   cancelPayment,
-  invoicePDF
+  invoicePDF,
+  validatePayment,
 };
