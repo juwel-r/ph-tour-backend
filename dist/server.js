@@ -14,26 +14,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = __importDefault(require("./app"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+const env_config_1 = require("./app/config/env.config");
+const seedSuperAdmin_1 = require("./app/utils/seedSuperAdmin");
+const redis_config_1 = require("./app/config/redis.config");
 let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield mongoose_1.default.connect(process.env.MONGODB_LOCAL);
+            yield mongoose_1.default.connect(env_config_1.envVar.DB_URL);
             console.log("Mongoose connected.");
-            server = app_1.default.listen(5000, () => {
-                console.log("Server is listening on port 5000");
+            server = app_1.default.listen(env_config_1.envVar.PORT, () => {
+                console.log(`Server is listening on port ${env_config_1.envVar.PORT}`);
             });
         }
         catch (error) {
-            console.log({ name: error.name, message: error.message });
+            console.log(error);
         }
     });
 }
-main();
-//==>> Error Handler
-// See details about error handler => '../___notes.js'
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, redis_config_1.connectRedis)();
+        yield main();
+        yield (0, seedSuperAdmin_1.seedSuperAdmin)();
+    }
+    catch (error) {
+        console.log(error);
+        process.exit(1);
+    }
+}))();
 process.on("uncaughtException", (error) => {
     console.log("uncaughtException error detected, server shutting down!", error.name);
     if (server) {

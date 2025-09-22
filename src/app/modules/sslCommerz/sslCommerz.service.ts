@@ -62,6 +62,7 @@ const validatePayment = async (payload: any) => {
     url: `${envVar.SSL.SSL_VALIDATION_API}?val_id=${payload.val_id}&store_id=${envVar.SSL.SSL_STORE_ID}&store_passwd=${envVar.SSL.SSL_STORE_PASS}`,
   });
 
+  // eslint-disable-next-line no-console
   console.log({ ipn_url_response: payload, validate_response: response.data });
 
   await Payment.updateOne(

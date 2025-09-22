@@ -4,7 +4,7 @@ import { generateToken, verifyToken } from "./jwt";
 import { isUserExistOrActive } from "./isUserExistOrActive";
 import { IUser } from "../modules/user/user.interface";
 
-export const createUserTokens = (user: Partial<IUser>) => {
+export const createUserTokens = (user: Partial<IUser> | JwtPayload) => {
   const jwtPayload: JwtPayload = {
     userId: user._id,
     email: user.email,
