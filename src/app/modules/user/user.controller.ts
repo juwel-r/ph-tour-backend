@@ -5,6 +5,7 @@ import { UserService } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
+import { OtpServices } from "../otp/otp.service";
 
 // const createUser = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
@@ -23,10 +24,12 @@ const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await UserService.createUser(req.body);
 
+    // await OtpServices.otpSend(user.email);
+
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: "User created successfully.",
+      message: "Registration successful, please verify email.",
       data: user,
     });
   }

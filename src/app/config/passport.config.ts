@@ -32,17 +32,21 @@ import bcryptjs from "bcryptjs";
 
           let user = await User.findOne({ email });
 
-          if (user?.isActive !== IsActive.ACTIVE) {
-            return done(`User is ${user?.isActive}`);
-          }
+          if (user) {
+            if (user?.isActive !== IsActive.ACTIVE) {
+              return done(null, false, {
+                message: `This email is registered but account is ${user?.isActive}`,
+              });
+            }
 
-          if (user?.isDelete) {
-            return done(null, false, { message: "User is deleted." });
-          }
+            if (user.isDelete) {
+              return done(null, false, { message: "This user is deleted." });
+            }
 
-          // if (!user?.isVerified) {
-          //   return done(null, false, { message: "User is not verified."});
-          // }
+            if (!user?.isVerified) {
+              return done(null, false, { message: "You registered with credential but not verified email." });
+            }
+          }
 
           if (!user) {
             user = await User.create({
@@ -95,23 +99,6 @@ passport.use(
           return done("No user exist with this email!");
         }
 
-        if (isUserExist.isActive !== IsActive.ACTIVE) {
-          done(`User is ${isUserExist.isActive}`);
-        }
-
-        if (!isUserExist.isVerified) {
-          done(`User email is not verified.`);
-        }
-
-        if (isUserExist.isDelete) {
-          return done("User is deleted.");
-        }
-
-        // if (!isUserExist.isVerified) {
-        //   return done("User is not verified.");
-        // }
-        //done(error, user, info) -> jehetu 1st parameter eroor so just error ta dilei hobe baki gula na dileo hobe
-
         const isGoogleAuthenticated = isUserExist.auth.some(
           (providerObjects) => providerObjects.provider == "google"
         );
@@ -125,7 +112,7 @@ passport.use(
           );
         }
 
-        const isPasswordMatch = bcryptjs.compare(
+        const isPasswordMatch = await bcryptjs.compare(
           password,
           isUserExist.password as string
         );
@@ -133,6 +120,23 @@ passport.use(
         if (!isPasswordMatch) {
           return done("Password not matched!.");
         }
+
+        if (!isUserExist.isVerified) {
+          done(`User email is not verified.`);
+        }
+
+        if (isUserExist.isActive !== IsActive.ACTIVE) {
+          done(`User is ${isUserExist.isActive}`);
+        }
+
+        if (isUserExist.isDelete) {
+          return done("User is deleted.");
+        }
+
+        // if (!isUserExist.isVerified) {
+        //   return done("User is not verified.");
+        // }
+        //done(error, user, info) -> jehetu 1st parameter eroor so just error ta dilei hobe baki gula na dileo hobe
 
         return done(null, isUserExist);
       } catch (error) {

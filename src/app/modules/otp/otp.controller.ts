@@ -27,7 +27,7 @@ const otpVerify = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: 200,
-      message: "OTP verified successfully",
+      message: "Email verified successfully",
       data: null,
     });
   }

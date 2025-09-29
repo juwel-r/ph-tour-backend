@@ -31,8 +31,11 @@ const createUser = async (payload: Partial<IUser>) => {
     ...rest,
     auth,
   });
+  
+  const userObj = user.toObject();
+  delete userObj.password;
 
-  return user;
+  return userObj;
 };
 
 // Get All Users
@@ -69,12 +72,9 @@ const updateUser = async (
     );
   }
 
-  if(decodedToken.role === Role.GUID || decodedToken.role === Role.USER){
-    if(decodedToken.userId !== userId){
-            throw new AppError(
-        httpStatusCodes.FORBIDDEN,
-        "You are unauthorized."
-      );
+  if (decodedToken.role === Role.GUID || decodedToken.role === Role.USER) {
+    if (decodedToken.userId !== userId) {
+      throw new AppError(httpStatusCodes.FORBIDDEN, "You are unauthorized.");
     }
   }
 

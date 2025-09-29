@@ -7,6 +7,10 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import expressSession from "express-session";
 import "./app/config/passport.config";
+import session from "express-session";
+
+
+
 
 const app = express();
 
@@ -17,13 +21,22 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(session({
+  secret: "your-secret",
+  resave: false,
+  saveUninitialized: true
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //for form data
 app.use(cookieParser());
 app.set("true proxy", 1);
-app.use(cors());
+app.use(cors({
+  origin:["http://localhost:3000"],
+  credentials:true
+}));
 app.use("/api/v1", router);
 
 app.get("/", (req: Request, res: Response) => {

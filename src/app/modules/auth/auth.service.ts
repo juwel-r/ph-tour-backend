@@ -129,7 +129,7 @@ const resetPassword = async (
   decodedToken: JwtPayload
 ) => {
   if (payload.id !== decodedToken.userId) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "You can not reset password.");
+    throw new AppError(httpStatus.UNAUTHORIZED, "You can not actual user.");
   }
 
   const hashedPassword = await bcryptjs.hash(
@@ -138,9 +138,8 @@ const resetPassword = async (
   );
   await User.findByIdAndUpdate(payload.id, { password: hashedPassword });
 };
-/**
-http://localhost:3000/reset-password?id=68cc5e8e0886713abde467ae&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGNjNWU4ZTA4ODY3MTNhYmRlNDY3YWUiLCJyb2xlIjoiVVNFUiIsImVtYWlsIjoicmlyaXhpZDg1MEBiaXRmYW1pLmNvbSIsImlhdCI6MTc1ODIyNTQ5NCwiZXhwIjoxNzU4MjI2MDk0fQ.xk8MoXdnUP8t_cqyGOiQm3TU7av68hK1_BY6u3c3VRY
- */
+
+
 export const AuthServices = {
   // credentialLogin,
   getNewAccessToken,
