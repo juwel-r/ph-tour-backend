@@ -202,3 +202,79 @@ export default app;
 * 
  * 
  */
+
+
+
+/*
+        /**
+         
+
+          #Server
+PORT=5000
+DB_URL_LOCAL=mongodb://localhost:27017/ph-tour-management
+DB_URL=mongodb+srv://e:e@cluster0.hjkzu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+NODE_ENV='development'
+
+#JWT 
+JWT_ACCESS_SECRET = secrect-token
+JWT_ACCESS_EXPIRES = 1d
+JWT_REFRESH_SECRET = refresh-token
+JWT_REFRESH_EXPIRES = 30d
+
+
+#BCRYPT
+BCRYPT_SALT_ROUND = 10
+
+#Super Admin
+SUPER_ADMIN_EMAIL=super@email.com
+SUPER_ADMIN_PASSWORD=123456
+
+#Google 
+GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID_HERE
+GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET_HERE
+GOOGLE_CALLBACK_URL=https://ph-tour-server-gamma.vercel.app/api/v1/auth/google/callback
+ 
+#Express Session
+EXPRESS_SESSION_SECRET=express-Session
+
+#Frontend URL
+FRONTEND_URL=http://localhost:3000
+
+# SSL Commerz
+SSL_STORE_ID=juwel689b5c84a23f7
+SSL_STORE_PASS=juwel689b5c84a23f7@ssl
+SSL_PAYMENT_API=https://sandbox.sslcommerz.com/gwprocess/v3/api.php
+SSL_VALIDATION_API=https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?wsdl
+SSL_IPN_URL=https://ph-tour-server-gamma.vercel.app/api/v1/payment/validate_payment
+
+#SSL Backend URL
+SSL_SUCCESS_BACKEND_URL=https://ph-tour-server-gamma.vercel.app/api/v1/payment/success
+SSL_FAILED_BACKEND_URL=https://ph-tour-server-gamma.vercel.app/api/v1/payment/failed
+SSL_CANCEL_BACKEND_URL=https://ph-tour-server-gamma.vercel.app/api/v1/payment/cancel
+
+#SSL Frontend URL
+SSL_SUCCESS_FRONTEND_URL=http://localhost:5173/payment/success
+SSL_FAILED_FRONTEND_URL=http://localhost:5173/payment/failed
+SSL_CANCEL_FRONTEND_URL=http://localhost:5173/payment/cancel
+
+# CLOUDINARY
+CLOUDINARY_API_SECRET = DZ2o2V3s0RP288pS9k-4EH17rI8
+CLOUDINARY_API_KEY = 288237845728221
+CLOUDINARY_CLOUD_NAME = docfpqmab
+
+#CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@docfpqmab
+
+# NODE MAILER
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=0juwel.d@gmail.com
+SMTP_PASS=dmvq kosp eehi ckda
+SMTP_FROM=0juwel.d@gmail.com
+
+# REDIS
+REDIS_USERNAME=default
+REDIS_PASSWORD=LjzkH5EcUwHKQyzYHLxBA0VLUKNz9d4a
+REDIS_HOST=redis-11095.c15.us-east-1-2.ec2.redns.redis-cloud.com
+REDIS_PORT=11095
+         */
+*/
