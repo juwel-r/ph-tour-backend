@@ -33,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //for form data
 app.use(cookieParser());
 app.set("true proxy", 1);
+
 app.use(cors({
   origin:["http://localhost:3000"],
   credentials:true
