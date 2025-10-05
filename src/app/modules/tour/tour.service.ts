@@ -13,6 +13,7 @@ const createTourType = async (payload: ITourType) => {
     throw new AppError(httpStatus.CONFLICT, "This tour type is already exist.");
   }
 
+
   const tourType = await TourType.create(payload);
   return tourType;
 };
@@ -49,6 +50,10 @@ const createTour = async (payload: ITour) => {
       "A tour with this title already exists."
     );
   }
+
+
+  console.log(payload);
+
 
   // slug created at pre hook
   //   const baseSlug = payload.title.toLocaleLowerCase().split(" ").join("-");
