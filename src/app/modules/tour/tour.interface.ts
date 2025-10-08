@@ -15,7 +15,7 @@ export interface ITour {
   excluded?: string[];
   amenities?: string[];
   tourPlane?: string[];
-  maxGuest?: number;
+  maxGuest: number;
   minAge?: number;
   division: Types.ObjectId;
   tourType: Types.ObjectId;

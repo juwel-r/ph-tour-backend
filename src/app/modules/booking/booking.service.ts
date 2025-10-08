@@ -9,6 +9,7 @@ import { PAYMENT_STATUS } from "../payment/payment.interface";
 import { SSLService } from "../sslCommerz/sslCommerz.service";
 import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
 import { getTransactionID } from "../../utils/getTransactionID";
+import { ITour } from "../tour/tour.interface";
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   /**
@@ -46,7 +47,12 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       { session }
     );
 
-    const tour = await Tour.findById(payload.tour).select("costFrom");
+    const tour:ITour = await Tour.findById(payload.tour).select("costFrom maxGuest");
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if(tour.maxGuest < payload.guestCount!){
+      throw new AppError (httpStatusCodes.BAD_REQUEST,`Maximum guest limit is ${tour.maxGuest}`)
+    }
 
     if (!tour?.costFrom) {
       throw new AppError(httpStatusCodes.BAD_REQUEST, "No Tour Cost Found!");
