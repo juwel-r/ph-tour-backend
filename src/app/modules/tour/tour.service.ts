@@ -172,7 +172,7 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
   //if user  delete images
   if (payload.deleteImages?.length && isTourExist?.images?.length) {
     const remainingImages = isTourExist.images.filter(
-      (img) => !payload.deleteImages?.includes(img)
+      (img:string) => !payload.deleteImages?.includes(img)
     );
 
     const updatePayloadImg = (payload.images || [])
