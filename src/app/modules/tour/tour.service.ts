@@ -1,5 +1,5 @@
 import AppError from "../../errorHelpers/AppError";
-import { searchAbleField } from "./tour.constraint";
+import { searchAbleField, searchAbleFieldForTourType } from "./tour.constraint";
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 import httpStatus from "http-status-codes";
@@ -13,9 +13,26 @@ const createTourType = async (payload: ITourType) => {
     throw new AppError(httpStatus.CONFLICT, "This tour type is already exist.");
   }
 
-
   const tourType = await TourType.create(payload);
   return tourType;
+};
+
+const getAllTourType = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(TourType.find(), query);
+  const tourType = await queryBuilder
+    .filter()
+    .search(searchAbleFieldForTourType)
+    .sort()
+    .fields()
+    .paginate()
+    .build();
+
+  const meta = await queryBuilder.getMeta();
+
+  return {
+    meta: { ...meta },
+    data: tourType,
+  };
 };
 
 const updateTourType = async (id: string, payload: ITourType) => {
@@ -50,10 +67,6 @@ const createTour = async (payload: ITour) => {
       "A tour with this title already exists."
     );
   }
-
-
-  console.log(payload);
-
 
   // slug created at pre hook
   //   const baseSlug = payload.title.toLocaleLowerCase().split(" ").join("-");
@@ -137,6 +150,7 @@ const getAllTour = async (query: Record<string, string>) => {
     .sort()
     .fields()
     .paginate()
+    .populate("division tourType")
     .build();
 
   const meta = await queryBuilder.getMeta();
@@ -205,6 +219,7 @@ const deleteTour = async (id: string) => {
 
 export const TourServices = {
   createTourType,
+  getAllTourType,
   updateTourType,
   deleteTourType,
   createTour,
